@@ -1,5 +1,6 @@
-package com.spring.jwttoken.security.service;
+package com.spring.jwttoken.security.service.impl;
 
+import com.spring.jwttoken.security.service.IJWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JWTService {
+public class JWTService implements IJWTService {
 
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 

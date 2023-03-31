@@ -1,4 +1,4 @@
-package com.spring.jwttoken.security.service;
+package com.spring.jwttoken.security.service.impl;
 
 import com.spring.jwttoken.security.model.User;
 import com.spring.jwttoken.security.repository.UserRepository;

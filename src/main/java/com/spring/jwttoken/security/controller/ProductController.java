@@ -2,13 +2,17 @@ package com.spring.jwttoken.security.controller;
 
 
 import com.spring.jwttoken.security.model.Product;
-import com.spring.jwttoken.security.service.ProductService;
+import com.spring.jwttoken.security.service.impl.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/product")
@@ -20,7 +24,7 @@ public class ProductController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity<Product> saveProduct(Product product){
+    public ResponseEntity<Product> saveProduct(@RequestBody Product product){
 
         Product savedProduct = productService.addProduct(product);
 
@@ -30,7 +34,7 @@ public class ProductController {
 
 
 
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'USER')")
     @GetMapping("/all")
     public List<Product> getAllProduct(){
 
@@ -39,21 +43,35 @@ public class ProductController {
 
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER_ADMIN')")
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Product> deleteProductById(@PathVariable String id){
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteProductById(@PathVariable String id){
+        try{
         Product product = productService.deleteProductById(id);
 
-        return ResponseEntity.ok(product);
+        return ResponseEntity.ok(product);}
+        catch (Exception e){
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("error", "Product with id "+id+"not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        }
+
     }
 
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String id){
+    public ResponseEntity<Object> getProductById(@PathVariable String id){
 
-        Product product = productService.getProductById(id);
+        try {
+            Product product = productService.getProductById(id);
+            return ResponseEntity.ok(product);
+        }
+        catch (Exception e){
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("error", "Product with id "+id+"not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        }
 
-        return ResponseEntity.ok(product);
+
     }
 }

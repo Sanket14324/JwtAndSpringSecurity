@@ -1,4 +1,4 @@
-package com.spring.jwttoken.security.service;
+package com.spring.jwttoken.security.service.impl;
 
 
 import com.spring.jwttoken.security.model.Product;
@@ -15,8 +15,9 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     public Product addProduct(Product product){
-        productRepository.save(product);
-        System.out.println(product);
+        Product savedProduct = productRepository.save(product);
+        System.out.println(product.getName()+"---------"+product.getPrice());
+        System.out.println(savedProduct.getName()+"---------"+savedProduct.getPrice());
         return product;
     }
 
