@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    @GetMapping("/all")
+    @GetMapping()
     public List<UserDto> getAllUser(){
         List<User> userList = userServiceImpl.getListOfUser();
         ModelMapper modelMapper = new ModelMapper();

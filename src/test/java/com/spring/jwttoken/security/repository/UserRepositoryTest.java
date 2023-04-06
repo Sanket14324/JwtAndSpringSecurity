@@ -47,6 +47,11 @@ class UserRepositoryTest {
 
     }
 
+    @Test
+    void existByEmail(){
+        Boolean condition = userRepository.existsByEmail("fake@gmail.com");
+        assertTrue(condition);
+    }
 
 
     @AfterEach

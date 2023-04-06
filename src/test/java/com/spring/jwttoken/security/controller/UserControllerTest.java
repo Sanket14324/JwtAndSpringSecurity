@@ -180,4 +180,45 @@ class UserControllerTest {
                 () -> assertEquals("fake@gmail.com", actualUser.getEmail())
         );
     }
+
+    @Test
+    void getUserByEmailOrId() {
+        User user = new User();
+        user.setId("1");
+        user.setEmail("fake@gmail.com");
+        user.setName("Fake name");
+        user.setRole("USER");
+        user.setPassword("hsvcuhdsBcuysbhc");
+
+
+
+        when(userService.getUserByEmailOrId(anyString())).thenReturn(user);
+
+        ResponseEntity<Object> responseObject = userController.getUserByEmailOrId("fake@gmail.com");
+
+        UserDto actualUser =(UserDto) responseObject.getBody();
+
+        assertAll(
+                () -> assertNotNull(actualUser),
+                () -> assertEquals("Fake name", actualUser.getName()),
+                () -> assertEquals("fake@gmail.com", actualUser.getEmail()),
+                () -> assertEquals("USER", actualUser.getRole()),
+                () -> assertEquals("1", actualUser.getId())
+        );
+
+        ResponseEntity<Object> responseObject1 = userController.getUserByEmailOrId("1");
+
+        UserDto actualUser1 =(UserDto) responseObject1.getBody();
+
+        assertAll(
+                () -> assertNotNull(actualUser),
+                () -> assertEquals("Fake name", actualUser.getName()),
+                () -> assertEquals("fake@gmail.com", actualUser.getEmail()),
+                () -> assertEquals("USER", actualUser.getRole()),
+                () -> assertEquals("1", actualUser.getId())
+        );
+
+
+
+    }
 }

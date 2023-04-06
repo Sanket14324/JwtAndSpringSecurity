@@ -33,7 +33,7 @@ public class ProductController {
 
 
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN', 'USER')")
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<Object> getAllProduct(){
 
         List<Product>  productList = productServiceImpl.getListOfProducts();

@@ -1,6 +1,8 @@
 package com.spring.jwttoken.security.model;
 
+import com.spring.jwttoken.security.validation.UniqueEmail;
 import jakarta.persistence.Entity;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +31,7 @@ public class User {
 
 
     @NotNull
+    @UniqueEmail
     @Email(message = "Email must be in proper format")
     private String email;
 
