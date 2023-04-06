@@ -1,9 +1,7 @@
 package com.spring.jwttoken.security.service.impl;
 
 import com.spring.jwttoken.security.service.IJWTService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,39 +19,42 @@ public class JWTService implements IJWTService {
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
 
-    public String extractUsername(String token) {
+    public String extractUsername(String token) throws ExpiredJwtException {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public Date extractExpiration(String token) {
+    public Date extractExpiration(String token)throws ExpiredJwtException {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) throws ExpiredJwtException {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
-        return Jwts
+    private Claims extractAllClaims(String token) throws ExpiredJwtException{
+        Claims claims = Jwts
                 .parserBuilder()
                 .setSigningKey(getSignKey())
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(token) // here exception occur
                 .getBody();
+        return claims;
+
+
     }
 
-    private Boolean isTokenExpired(String token) {
+    private Boolean isTokenExpired(String token)throws ExpiredJwtException {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, UserDetails userDetails) throws ExpiredJwtException {
         final String email = extractUsername(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
 
-    public String generateToken(String email){
+    public String generateToken(String email)throws ExpiredJwtException{
         Map<String,Object> claims=new HashMap<>();
         return createToken(claims,email);
     }

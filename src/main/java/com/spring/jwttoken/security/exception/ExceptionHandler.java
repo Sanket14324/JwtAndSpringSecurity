@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 @RestControllerAdvice
-@Order(Ordered.HIGHEST_PRECEDENCE)
+//@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler(value = {AccessDeniedException.class})
@@ -25,5 +25,10 @@ public class ExceptionHandler {
         // Return HTTP response with error
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
     }
+
+//    @ExceptionHandler(NoSuchRequestHandlingMethodException.class)
+//    public ResponseEntity<Object> handleInvalidRequest(NoSuchRequestHandlingMethodException ex, WebRequest request)
+//    { String message = "The requested URL is invalid or the resource does not exist.";
+//        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND); }
 
 }

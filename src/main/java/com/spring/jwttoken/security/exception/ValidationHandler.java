@@ -1,6 +1,8 @@
 package com.spring.jwttoken.security.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,6 +20,7 @@ import java.util.Map;
 
 @ControllerAdvice
 @RestControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ValidationHandler extends ResponseEntityExceptionHandler {
 
     // this class is to handle validation
@@ -36,7 +39,7 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
                 );
 
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
-//        return super.handleMethodArgumentNotValid(ex, headers, status, request);
+
     }
 
 

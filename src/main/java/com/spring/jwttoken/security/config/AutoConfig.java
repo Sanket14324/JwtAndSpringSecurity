@@ -42,7 +42,7 @@ public class AutoConfig {
     public SecurityFilterChain getSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity.
                 csrf().disable()
-                .authorizeHttpRequests().requestMatchers("/api/user", "/api/user/login").permitAll().and()
+                    .authorizeHttpRequests().requestMatchers("/api/user", "/api/user/login").permitAll().and()
                 .authorizeHttpRequests().requestMatchers("/api/user/**", "/api/product/**", "/api/product").authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

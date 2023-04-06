@@ -3,26 +3,24 @@ package com.spring.jwttoken.security.service.impl;
 
 import com.spring.jwttoken.security.model.Product;
 import com.spring.jwttoken.security.repository.ProductRepository;
+import com.spring.jwttoken.security.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ProductService {
+public class ProductServiceImpl implements IProductService {
 
 
     @Autowired
     private ProductRepository productRepository;
     public Product addProduct(Product product){
         Product savedProduct = productRepository.save(product);
-        System.out.println(product.getName()+"---------"+product.getPrice());
-        System.out.println(savedProduct.getName()+"---------"+savedProduct.getPrice());
-        return product;
+        return savedProduct;
     }
 
     public List<Product> getListOfProducts(){
-        System.out.println(productRepository);
         return productRepository.findAll();
     }
 
@@ -36,6 +34,17 @@ public class ProductService {
 
         productRepository.delete(product);
         return product;
+    }
+
+    public Product updateProductById(String id, Product product){
+
+        Product editProduct = productRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Product not found of id - "+ id));
+
+        editProduct.setName(product.getName());
+        editProduct.setPrice(product.getPrice());
+
+        return productRepository.save(editProduct);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.spring.jwttoken.security.filter;
 
 import com.spring.jwttoken.security.service.impl.JWTService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +28,8 @@ public class JWTFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, ExpiredJwtException {
+
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
@@ -36,19 +38,29 @@ public class JWTFilter extends OncePerRequestFilter {
 
             try {
                 username = jwtService.extractUsername(token);
+
             }
-            catch (Exception e) {
-                // Token has expired, return unauthorized response
+            catch (Exception e){
+
                 HttpServletResponse httpResponse = (HttpServletResponse) response;
                 httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 httpResponse.getWriter().write("{\"error\": \""+e.getMessage()+"\"}");
+
                 return;
             }
 
         }
+//        else{
+//
+//            HttpServletResponse httpResponse = (HttpServletResponse) response;
+//                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                httpResponse.getWriter().write("{\"error\": \" Auth header not exist or token not exist \"}");
+//                return;
+//        }
 
 
-        try{
+
+
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 if (jwtService.validateToken(token, userDetails)) {
@@ -57,13 +69,7 @@ public class JWTFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-        }
-        catch (Exception e){
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            httpResponse.getWriter().write("{\"error\": \""+e.getMessage()+"\"}");
-            return;
-        }
+
 
         filterChain.doFilter(request, response);
     } }

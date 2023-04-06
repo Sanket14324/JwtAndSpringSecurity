@@ -18,10 +18,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> userOptional = userService.getUserByEmail(email);
+        Optional<User> userOptional = userServiceImpl.getUserByEmail(email);
         return userOptional.map(UserDetail::new)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found " + email));
     }

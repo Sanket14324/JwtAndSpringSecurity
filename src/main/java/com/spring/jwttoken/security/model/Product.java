@@ -1,6 +1,9 @@
 package com.spring.jwttoken.security.model;
 
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +21,11 @@ public class Product {
     @Id
     private String id;
 
+    @NotNull(message = "must have name")
     private String name;
 
+    @NotNull(message = "Must have price")
+    @Positive(message = "Must be positive")
+    @Min(value = 1, message = "must be more than 0")
     private Integer price;
 }
